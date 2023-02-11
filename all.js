@@ -1,20 +1,27 @@
-console.log(1);
+const apiUrl = 'https://vue3-course-api.hexschool.io'
+const apiPath = 'susu3131'
 
-const app ={
-  data(){
-    return{
-      text:'這是一段文字'
+
+const app = Vue.createApp({
+  data() {
+    return {
+      products:[],
+      cart: {},
+      test: '測試文字',
+      }
+    },
+  methods: {
+    getData(page=1){
+      const url = `${apiUrl}/v2/api/${apiPath}/products/?page=${page}`
+      axios.get(url)
+        .then(res=> this.products = res.data.products)
+        .catch(err=> console.log(err))
     }
   },
-  methods:{
-    getData(){
-      
-    }
-  },
-  mounted(){
-    console.log(1)
+  mounted() {
+    this.getData()
+
   }
-}
+})
 
-
-Vue.createApp(app).mount('#app')
+app.mount('#app');
