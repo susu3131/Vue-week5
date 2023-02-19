@@ -18,7 +18,7 @@
     <div class="container">
       <div class="mt-4">
         <!-- 產品Modal -->
-        <product-modal :id="productID"   :add-cart="addCart" ref="productModal"></product-modal>
+        <product-modal :id="productID" :add-cart="addCart" ref="productModal"></product-modal>
         <!-- 產品Modal -->
         <table class="table align-middle">
           <thead>
@@ -39,7 +39,7 @@
               </td>
               <td>
 
-                <div class="h5" v-if =" product.price === product.origin_price" >{{ product.origin_price}} 元</div>
+                <div class="h5" v-if=" product.price === product.origin_price">{{ product.origin_price}} 元</div>
                 <div v-else>
                   <del class="h6">原價 {{ product.origin_price}} 元</del>
                   <div class="h5">現在只要 {{ product.price}} 元</div>
@@ -62,7 +62,7 @@
         </table>
         <!-- 購物車列表 -->
         <div class="text-end">
-          <button class="btn btn-outline-danger" type="button" @click = "deleteAllCart">清空購物車</button>
+          <button class="btn btn-outline-danger" type="button" @click="deleteAllCart">清空購物車</button>
         </div>
         <table class="table align-middle">
           <thead>
@@ -73,36 +73,32 @@
               <th>單價</th>
             </tr>
           </thead>
-          <tbody v-for = "cartProduct in cart"  :key="cartProduct.id">
-            <th><button type="button" class="btn-close  border border-danger btn-danger " aria-label="Close" @click = "deleteCart(cartProduct.id)"></button></th>
-            <th>{{cartProduct.product.title}}</th>
-            <th>{{cartProduct.qty}}</th>
-            <th>{{cartProduct.total}}</th>
-            <template >
+          <tbody v-for="cartProduct in cart" :key="cartProduct.id">
+            <template v-if ="cart">
               <tr>
                 <td>
-                  <button type="button" class="btn btn-outline-danger btn-sm">
+                  <button type="button" class="btn btn-outline-danger btn-sm"  @click="deleteCart(cartProduct.id)">
                     <i class="fas fa-spinner fa-pulse"></i>
                     x
                   </button>
                 </td>
                 <td>
-                  {{ }}
-                  <div class="text-success">
+                  {{ cartProduct.product.title }}
+                  <div class="text-success" v-if=" cartProduct.product.price !==  cartProduct.product.origin_price">
                     已套用優惠券
                   </div>
                 </td>
                 <td>
                   <div class="input-group input-group-sm">
                     <div class="input-group mb-3">
-                      <input min="1" type="number" class="form-control">
-                      <span class="input-group-text" id="basic-addon2">{{ }}</span>
+                      <input min="1" type="number" class="form-control" :value="cartProduct.qty">
+                      <span class="input-group-text" id="basic-addon2">{{ cartProduct.product.unit}}</span>
                     </div>
                   </div>
                 </td>
                 <td class="text-end">
-                  <small class="text-success">折扣價：</small>
-                  {{ }}
+                  <small class="text-success" v-if=" cartProduct.product.price !==  cartProduct.product.origin_price">折扣價：</small>
+                  {{ cartProduct.total }}
                 </td>
               </tr>
             </template>
@@ -191,9 +187,10 @@
                 </div>
                 <div>
                   <div class="input-group">
-                    <input type="number" class="form-control"
-                           min="1">
-                    <button type="button" class="btn btn-primary" @click="addCart(tempProduct.id)">加入購物車</button>
+                  <select name="" id="" class="form-control" v-model = "qty">
+                    <option :value="i" v-for = "i in 30" :key="`數字${i}`">{{ i }}</option>
+                  </select>
+                    <button type="button" class="btn btn-primary" @click="addCart(tempProduct.id,qty)">加入購物車</button>
           </div>
           </div>
           </div>

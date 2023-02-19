@@ -10,6 +10,7 @@ const productModal = {
     return{
       modal:{},
       tempProduct:{},
+      qty:1,
     }
   },
   methods: {
