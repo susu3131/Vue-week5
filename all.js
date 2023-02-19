@@ -4,6 +4,8 @@ const apiPath = 'susu3131'
 
 //區域註冊
 const productModal = {
+  //當id變動時取得資料，呈現modal
+  props:['id'],
   data(){
     return{
       modal:{},
@@ -13,13 +15,22 @@ const productModal = {
   methods:{
     click(){
       console.log('內層');
-      this.$emit('getTempProduct')
+      this.$emit('get-tempproduct')
+    }
+  },
+  watch:{
+    //監聽id變動取得資料
+    id(){
+      axios.get(`${apiUrl}/v2/api/${apiPath}/product/${this.id}`)
+        .then(res => this.tempProduct = res.data.product )
+    //取得id 再展開modal
+      this.modal.show()
     }
   },
   template:'#userProductModal',
   mounted(){
     this.modal = new bootstrap.Modal(this.$refs.modal)
-    this.modal.show()
+    
   }
 }
 
@@ -29,9 +40,11 @@ const app = Vue.createApp({
     return {
       products:[],
       cart: {},
-      test: '測試文字',
+      //取得資料ID
+      productID:'',
       }
     },
+
   methods: {
     //取得資料
     getData(page=1){
@@ -40,8 +53,10 @@ const app = Vue.createApp({
         .then(res=> this.products = res.data.products)
         .catch(err=> console.log(err))
     },
-    getTempProduct(){
-      console.log('test');
+    //開啟modal時取得對應產品id
+    getID(id){
+      //取得key值得productid 代入data 的 id 
+      this.productID = id ;
     }
   },
   components:{

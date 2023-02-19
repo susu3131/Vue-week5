@@ -18,9 +18,8 @@
     <div class="container">
       <div class="mt-4">
         <!-- 產品Modal -->
-        <product-modal></product-modal>
+        <product-modal :id="productID"></product-modal>
         <!-- 產品Modal -->
-        {{ products}}
         <table class="table align-middle">
           <thead>
             <tr>
@@ -40,14 +39,16 @@
               </td>
               <td>
 
-                <!-- <div class="h5" >{{  product.origin_price}} 元</div> -->
-                <del class="h6">原價 {{ product.origin_price}} 元</del>
-                <div class="h5">現在只要 {{ product.price}} 元</div>
+                <div class="h5" v-if =" product.price === product.origin_price" >{{ product.origin_price}} 元</div>
+                <div v-else>
+                  <del class="h6">原價 {{ product.origin_price}} 元</del>
+                  <div class="h5">現在只要 {{ product.price}} 元</div>
+                </div>
               </td>
               <td>
                 <div class="btn-group btn-group-sm">
-                  <button type="button" class="btn btn-outline-secondary" @click="getTempProduct()">
-                    <i class="fas fa-spinner fa-pulse" ></i>
+                  <button type="button" class="btn btn-outline-secondary" @click="getID(product.id)">
+                    <i class="fas fa-spinner fa-pulse"></i>
                     查看更多
                   </button>
                   <button type="button" class="btn btn-outline-danger">
@@ -164,7 +165,7 @@
         <div class="modal-content border-0">
           <div class="modal-header bg-dark text-white">
             <h5 class="modal-title" id="exampleModalLabel">
-              <span>{{ }}</span>
+              <span>{{tempProduct.title }}</span>
           </h5>
             <button type="button" class="btn-close"
                     data-bs-dismiss="modal" aria-label="Close"></button>
@@ -172,15 +173,17 @@
           <div class="modal-body">
             <div class="row">
               <div class="col-sm-6">
-                <img class="img-fluid" :src="" alt="">
+                <img class="img-fluid" :src="tempProduct.imageUrl" alt="">
           </div>
               <div class="col-sm-6">
                 <span class="badge bg-primary rounded-pill">{{  }}</span>
-                <p>商品描述：{{  }}</p>
-                <p>商品內容：{{  }}</p>
-                <div class="h5">{{  }} 元</div>
-                <del class="h6">原價 {{ }} 元</del>
-                <div class="h5">現在只要 {{  }} 元</div>
+                <p>商品描述：{{ tempProduct.description }}</p>
+                <p>商品內容：{{ tempProduct.content }}</p>
+                <div class="h5" v-if = "tempProduct.origin_price === tempProduct.price">{{ tempProduct.origin_price }} 元</div>
+                <div v-else>
+                <del class="h6" >原價 {{ tempProduct.origin_price}} 元</del>
+                <div class="h5">現在只要 {{ tempProduct.price }} 元</div>
+                </div>
                 <div>
                   <div class="input-group">
                     <input type="number" class="form-control"
