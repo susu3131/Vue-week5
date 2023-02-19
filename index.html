@@ -18,7 +18,7 @@
     <div class="container">
       <div class="mt-4">
         <!-- 產品Modal -->
-        <product-modal :id="productID"></product-modal>
+        <product-modal :id="productID"   :add-cart="addCart" ref="productModal"></product-modal>
         <!-- 產品Modal -->
         <table class="table align-middle">
           <thead>
@@ -78,7 +78,7 @@
             <th>{{cartProduct.product.title}}</th>
             <th>{{cartProduct.qty}}</th>
             <th>{{cartProduct.total}}</th>
-            <template v-if="cart.carts">
+            <template >
               <tr>
                 <td>
                   <button type="button" class="btn btn-outline-danger btn-sm">
@@ -165,6 +165,7 @@
   <script type="text/x-template" id="userProductModal">
     <div class="modal fade" id="productModal" tabindex="-1" role="dialog"
          aria-labelledby="exampleModalLabel" aria-hidden="true" ref="modal">
+         {{cart}}
       <div class="modal-dialog modal-xl" role="document">
         <div class="modal-content border-0">
           <div class="modal-header bg-dark text-white">
@@ -192,7 +193,7 @@
                   <div class="input-group">
                     <input type="number" class="form-control"
                            min="1">
-                    <button type="button" class="btn btn-primary">加入購物車</button>
+                    <button type="button" class="btn btn-primary" @click="addCart(tempProduct.id)">加入購物車</button>
           </div>
           </div>
           </div>

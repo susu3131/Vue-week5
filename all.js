@@ -5,17 +5,16 @@ const apiPath = 'susu3131'
 //區域註冊 modal 元件
 const productModal = {
   //當id變動時取得資料，呈現modal
-  props:['id'],
+  props:['id','addCart'],
   data(){
     return{
       modal:{},
       tempProduct:{},
     }
   },
-  methods:{
-    click(){
-      console.log('內層');
-      this.$emit('get-tempproduct')
+  methods: {
+    hideModal(){
+      this.modal.hide();
     }
   },
   watch:{
@@ -40,7 +39,6 @@ const app = Vue.createApp({
     return {
       products:[],
       cart: {},
-      tempCart:{},
       //取得資料ID
       productID:'',
 
@@ -69,8 +67,9 @@ const app = Vue.createApp({
       }
       axios.post(`${apiUrl}/v2/api/${apiPath}/cart`,{data:tempCart})
       .then(res=> {
-        // this.$refs.modal.hide
+        this.$refs.productModal.hideModal();
         alert(res.data.message)
+        console.log(res.data);
       })
       .catch(err=> console.log(err))
     },
@@ -96,10 +95,17 @@ const app = Vue.createApp({
   components:{
     productModal
   },
+  watch:{
+    cart(){
+      axios.get(`${apiUrl}/v2/api/${apiPath}/cart`)
+      .then(res=>this.cart = res.data.data.carts)
+      .catch(err=> console.log(err))
+    }
+  },
   mounted() {
-    this.getData(),
-    this.getCart()
-
+    this.getData();
+    this.getCart();
+    
   }
 })
 
