@@ -2,7 +2,7 @@ const apiUrl = 'https://vue3-course-api.hexschool.io'
 const apiPath = 'susu3131'
 
 
-//區域註冊
+//區域註冊 modal 元件
 const productModal = {
   //當id變動時取得資料，呈現modal
   props:['id'],
@@ -40,30 +40,65 @@ const app = Vue.createApp({
     return {
       products:[],
       cart: {},
+      tempCart:{},
       //取得資料ID
       productID:'',
+
       }
+
     },
 
   methods: {
-    //取得資料
+    //1 取得資料
     getData(page=1){
       const url = `${apiUrl}/v2/api/${apiPath}/products/?page=${page}`
       axios.get(url)
         .then(res=> this.products = res.data.products)
         .catch(err=> console.log(err))
     },
-    //開啟modal時取得對應產品id
+    //2 開啟modal時取得對應產品id
     getID(id){
       //取得key值得productid 代入data 的 id 
       this.productID = id ;
+    },
+    //3 加入購物車
+    addCart(id,qty=1){
+      const tempCart = {
+        product_id : id ,
+        qty,
+      }
+      axios.post(`${apiUrl}/v2/api/${apiPath}/cart`,{data:tempCart})
+      .then(res=> {
+        // this.$refs.modal.hide
+        alert(res.data.message)
+      })
+      .catch(err=> console.log(err))
+    },
+    //4 取得購物車資料
+    getCart(){
+      axios.get(`${apiUrl}/v2/api/${apiPath}/cart`)
+      .then(res=>this.cart = res.data.data.carts)
+      .catch(err=> console.log(err))
+    },
+    //5 刪除購物車(單一品項)
+    deleteCart(id){
+      axios.delete(`${apiUrl}/v2/api/${apiPath}/cart/${id}`)
+      .then(res=>alert(res.data.message))
+      .catch(err=> console.log(err))
+    },
+    //6 清空購物車
+    deleteAllCart(){
+      axios.delete(`${apiUrl}/v2/api/${apiPath}/carts`)
+      .then(res=>alert(res.data.message))
+      .catch(err=> console.log(err))
     }
   },
   components:{
     productModal
   },
   mounted() {
-    this.getData()
+    this.getData(),
+    this.getCart()
 
   }
 })

@@ -51,7 +51,7 @@
                     <i class="fas fa-spinner fa-pulse"></i>
                     查看更多
                   </button>
-                  <button type="button" class="btn btn-outline-danger">
+                  <button type="button" class="btn btn-outline-danger" @click="addCart(product.id)">
                     <i class="fas fa-spinner fa-pulse"></i>
                     加到購物車
                   </button>
@@ -62,7 +62,7 @@
         </table>
         <!-- 購物車列表 -->
         <div class="text-end">
-          <button class="btn btn-outline-danger" type="button">清空購物車</button>
+          <button class="btn btn-outline-danger" type="button" @click = "deleteAllCart">清空購物車</button>
         </div>
         <table class="table align-middle">
           <thead>
@@ -73,7 +73,11 @@
               <th>單價</th>
             </tr>
           </thead>
-          <tbody>
+          <tbody v-for = "cartProduct in cart"  :key="cartProduct.id">
+            <th><button type="button" class="btn-close  border border-danger btn-danger " aria-label="Close" @click = "deleteCart(cartProduct.id)"></button></th>
+            <th>{{cartProduct.product.title}}</th>
+            <th>{{cartProduct.qty}}</th>
+            <th>{{cartProduct.total}}</th>
             <template v-if="cart.carts">
               <tr>
                 <td>
