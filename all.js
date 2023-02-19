@@ -39,7 +39,9 @@ const app = Vue.createApp({
   data() {
     return {
       products:[],
-      cart: {},
+      cart: {
+        carts:[]
+      },
       //取得資料ID
       productID:'',
 
@@ -77,7 +79,10 @@ const app = Vue.createApp({
     //4 取得購物車資料
     getCart(){
       axios.get(`${apiUrl}/v2/api/${apiPath}/cart`)
-      .then(res=>this.cart = res.data.data.carts)
+      .then(res=>{
+        this.cart = res.data.data
+        console.log(res.data.data);
+      })
       .catch(err=> console.log(err))
     },
     //5 刪除購物車(單一品項)
@@ -99,7 +104,7 @@ const app = Vue.createApp({
   watch:{
     cart(){
       axios.get(`${apiUrl}/v2/api/${apiPath}/cart`)
-      .then(res=>this.cart = res.data.data.carts)
+      .then(res=>this.cart = res.data.data)
       .catch(err=> console.log(err))
     }
   },

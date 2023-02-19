@@ -73,9 +73,9 @@
               <th>單價</th>
             </tr>
           </thead>
-          <tbody v-for="cartProduct in cart" :key="cartProduct.id">
-            <template v-if ="cart">
-              <tr>
+          <tbody >
+            <template v-if ="cart.carts">
+              <tr v-for="cartProduct in cart.carts" :key="cartProduct.id">
                 <td>
                   <button type="button" class="btn btn-outline-danger btn-sm"  @click="deleteCart(cartProduct.id)">
                     <i class="fas fa-spinner fa-pulse"></i>
@@ -91,7 +91,9 @@
                 <td>
                   <div class="input-group input-group-sm">
                     <div class="input-group mb-3">
-                      <input min="1" type="number" class="form-control" :value="cartProduct.qty">
+                      <select name="" id="" class="form-control" v-model ="cartProduct.qty">
+                        <option :value="i" v-for ="i in 30" :key="`編號${i}`">{{i}}</option>
+                      </select>
                       <span class="input-group-text" id="basic-addon2">{{ cartProduct.product.unit}}</span>
                     </div>
                   </div>
@@ -103,14 +105,14 @@
               </tr>
             </template>
           </tbody>
-          <tfoot>
+          <tfoot >
             <tr>
               <td colspan="3" class="text-end">總計</td>
-              <td class="text-end">{{ }}</td>
+              <td class="text-end" v-model = "cart.total">{{ cart.total}}</td>
             </tr>
             <tr>
               <td colspan="3" class="text-end text-success">折扣價</td>
-              <td class="text-end text-success">{{ }}</td>
+              <td class="text-end text-success"  v-model = "cart.total">{{ cart.total}}</td>
             </tr>
           </tfoot>
         </table>
@@ -215,7 +217,7 @@
   <script src="https://unpkg.com/vee-validate@next"></script>
   <script src="https://unpkg.com/@vee-validate/i18n@4.1.0"></script>
   <script src="https://unpkg.com/@vee-validate/rules"></script>
-  <script src="./javascript/app2.js" type="module"></script>
+  <!-- <script src="./javascript/app2.js" type="module"></script> -->
   <script src="all.js" type="module"></script>
 
 </body>
