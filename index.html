@@ -77,19 +77,19 @@
             <template v-if ="cart.carts">
               <tr v-for="cartProduct in cart.carts" :key="cartProduct.id">
                 <td>
-                  <button type="button" class="btn btn-outline-danger btn-sm"  @click="deleteCart(cartProduct.id)">
-                    <i class="fas fa-spinner fa-pulse"></i>
+                  <button type="button" class="btn btn-outline-danger btn-sm"  @click="deleteCart(cartProduct.id)"  :disabled=" !loadingItem === '0' ">
+                    <i class="fas fa-spinner fa-pulse" v-if=" !loadingItem === '0' "></i>
                     x
                   </button>
                 </td>
                 <td>
                   {{ cartProduct.product.title }}
-
+                  {{ loadingItem}}
                 </td>
                 <td>
                   <div class="input-group input-group-sm">
                     <div class="input-group mb-3">
-                      <select name="" id="" class="form-control" v-model ="cartProduct.qty" @change =" updateCart(cartProduct.id,cartProduct.qty)">
+                      <select name="" id="" class="form-control" v-model ="cartProduct.qty" @change =" updateCart(cartProduct.id,cartProduct.qty)"  :disabled=" !loadingItem === '0' "  >
                         <option :value="i" v-for ="i in 30" :key="`編號${i}`">{{i}}</option>
                       </select>
                       <span class="input-group-text" id="basic-addon2">{{ cartProduct.product.unit}}</span>

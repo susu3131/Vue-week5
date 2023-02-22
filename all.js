@@ -44,7 +44,7 @@ const app = Vue.createApp({
       },
       //取得資料ID
       productID:'',
-      loadingItem:''
+      loadingItem:'0'
       }
 
     },
@@ -86,9 +86,12 @@ const app = Vue.createApp({
     },
     //5 刪除購物車(單一品項)
     deleteCart(id){
+      this.loadingItem = id ;
+      console.log(this.loadingItem);
       axios.delete(`${apiUrl}/v2/api/${apiPath}/cart/${id}`)
       .then(res=>alert(res.data.message))
       .catch(err=> console.log(err))
+      this.loadingItem = '' ;
     },
     //6 清空購物車
     deleteAllCart(){
@@ -98,7 +101,9 @@ const app = Vue.createApp({
     },
     //7 更新購物車
     updateCart(id,qty=1){
-      console.log('更新購物車');
+      this.loadingItem = id ;
+      console.log(id);
+      console.log(this.loadingItem);
       const data = {
         product_id:id,
         qty
@@ -106,7 +111,9 @@ const app = Vue.createApp({
       axios.put(`${apiUrl}/v2/api/${apiPath}/cart/${id}`,{data})
       .then(res=>alert(res.data.message))
       .catch(err=> console.log(err))
-      
+      this.loadingItem = "0" ;
+
+
     }
   },
   components:{
