@@ -44,7 +44,7 @@ const app = Vue.createApp({
       },
       //取得資料ID
       productID:'',
-
+      loadingItem:''
       }
 
     },
@@ -72,7 +72,6 @@ const app = Vue.createApp({
       .then(res=> {
         this.$refs.productModal.hideModal();
         alert(res.data.message)
-        console.log(res.data);
       })
       .catch(err=> console.log(err))
     },
@@ -96,6 +95,18 @@ const app = Vue.createApp({
       axios.delete(`${apiUrl}/v2/api/${apiPath}/carts`)
       .then(res=>alert(res.data.message))
       .catch(err=> console.log(err))
+    },
+    //7 更新購物車
+    updateCart(id,qty=1){
+      console.log('更新購物車');
+      const data = {
+        product_id:id,
+        qty
+      }
+      axios.put(`${apiUrl}/v2/api/${apiPath}/cart/${id}`,{data})
+      .then(res=>alert(res.data.message))
+      .catch(err=> console.log(err))
+      
     }
   },
   components:{
