@@ -11,14 +11,17 @@
   <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.9.0/css/all.min.css'
     integrity='sha512-q3eWabyZPc1XTCmF+8/LuE1ozpg5xxn7iO89yfSOd5/oKvyqLngoNGsx8jq92Y8eXJ/IRxQbEC+FGSYxtk2oiw=='
     crossorigin='anonymous' />
+    <link href="https://cdn.jsdelivr.net/npm/vue-loading-overlay@6/dist/css/index.css" rel="stylesheet">
 </head>
 
 <body>
   <div id="app">
+    <!-- <load v-model:active="isLoading">{{isLoading}}</load> -->
+
     <div class="container">
       <div class="mt-4">
         <!-- 產品Modal -->
-        <product-modal :id="productID" :add-cart="addCart" ref="productModal"></product-modal>
+        <product-modal :id="productID" :add-cart="addCart" :loadtype ="isShow" ref="productModal"></product-modal>
         <!-- 產品Modal -->
         <table class="table align-middle">
           <thead>
@@ -47,12 +50,12 @@
               </td>
               <td>
                 <div class="btn-group btn-group-sm">
-                  <button type="button" class="btn btn-outline-secondary" @click="getID(product.id)">
-                    <i class="fas fa-spinner fa-pulse"></i>
+                  <button type="button" class="btn btn-outline-secondary " @click="getID(product.id), isShow = true"  >
+                    <i class="fas fa-spinner fa-pulse" v-if="isShow"></i>
                     查看更多
                   </button>
-                  <button type="button" class="btn btn-outline-danger" @click="addCart(product.id)">
-                    <i class="fas fa-spinner fa-pulse"></i>
+                  <button type="button" class="btn btn-outline-danger" @click="addCart(product.id),isShow = true"  :disabled="loadItem === product.id">
+                    <i class="fas fa-spinner fa-pulse"  v-if="isShow"></i>
                     加到購物車
                   </button>
                 </div>
@@ -62,7 +65,7 @@
         </table>
         <!-- 購物車列表 -->
         <div class="text-end">
-          <button class="btn btn-outline-danger" type="button" @click="deleteAllCart">清空購物車</button>
+          <button class="btn btn-outline-danger" type="button" @click="deleteAllCart" >清空購物車</button>
         </div>
         <table class="table align-middle">
           <thead>
@@ -77,19 +80,18 @@
             <template v-if ="cart.carts">
               <tr v-for="cartProduct in cart.carts" :key="cartProduct.id">
                 <td>
-                  <button type="button" class="btn btn-outline-danger btn-sm"  @click="deleteCart(cartProduct.id)"  :disabled=" !loadingItem === '0' ">
-                    <i class="fas fa-spinner fa-pulse" v-if=" !loadingItem === '0' "></i>
+                  <button type="button" class="btn btn-outline-danger btn-sm"  @click="deleteCart(cartProduct.id)"  :disabled="loadItem === cartProduct.id">
+                    <i class="fas fa-spinner fa-pulse" v-if="isShow"></i>
                     x
                   </button>
                 </td>
                 <td>
                   {{ cartProduct.product.title }}
-                  {{ loadingItem}}
                 </td>
                 <td>
                   <div class="input-group input-group-sm">
                     <div class="input-group mb-3">
-                      <select name="" id="" class="form-control" v-model ="cartProduct.qty" @change =" updateCart(cartProduct.id,cartProduct.qty)"  :disabled=" !loadingItem === '0' "  >
+                      <select name="" id="" class="form-control" v-model ="cartProduct.qty" @change =" updateCart(cartProduct.id,cartProduct.qty)"  :disabled="loadItem === cartProduct.id"  >
                         <option :value="i" v-for ="i in 30" :key="`編號${i}`">{{i}}</option>
                       </select>
                       <span class="input-group-text" id="basic-addon2">{{ cartProduct.product.unit}}</span>
@@ -109,8 +111,6 @@
             </tr>
             <tr>
 
-              <td class="text-end text-success"  v-model = "cart.total">{{ cart.total}}</td>
-            </tr>
           </tfoot>
         </table>
       </div>
@@ -158,9 +158,9 @@
   </div>
 
   <script type="text/x-template" id="userProductModal">
+    
     <div class="modal fade" id="productModal" tabindex="-1" role="dialog"
          aria-labelledby="exampleModalLabel" aria-hidden="true" ref="modal">
-         {{cart}}
       <div class="modal-dialog modal-xl" role="document">
         <div class="modal-content border-0">
           <div class="modal-header bg-dark text-white">
@@ -214,7 +214,14 @@
   <script src="https://unpkg.com/vee-validate@next"></script>
   <script src="https://unpkg.com/@vee-validate/i18n@4.1.0"></script>
   <script src="https://unpkg.com/@vee-validate/rules"></script>
+  <!-- Vue js -->
+<script src="https://cdn.jsdelivr.net/npm/vue@3.2"></script>
+<!-- Lastly add this package -->
+<script src="https://cdn.jsdelivr.net/npm/vue-loading-overlay@6"></script>
+
+<!-- Init the plugin and component-->
   <!-- <script src="./javascript/app2.js" type="module"></script> -->
+  <script src="./loading.js" type="module"></script>
   <script src="all.js" type="module"></script>
 
 </body>

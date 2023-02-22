@@ -1,3 +1,5 @@
+// import loading  from './loading.js'
+
 const apiUrl = 'https://vue3-course-api.hexschool.io'
 const apiPath = 'susu3131'
 
@@ -5,7 +7,7 @@ const apiPath = 'susu3131'
 //區域註冊 modal 元件
 const productModal = {
   //當id變動時取得資料，呈現modal
-  props:['id','addCart'],
+  props:['id','addCart','loadtype'],
   data(){
     return{
       modal:{},
@@ -25,12 +27,12 @@ const productModal = {
         .then(res => this.tempProduct = res.data.product )
     //取得id 再展開modal
       this.modal.show()
+
     }
   },
   template:'#userProductModal',
   mounted(){
     this.modal = new bootstrap.Modal(this.$refs.modal)
-    
   }
 }
 
@@ -38,13 +40,15 @@ const productModal = {
 const app = Vue.createApp({
   data() {
     return {
+      isLoading: true,
+      isShow: false,
       products:[],
       cart: {
         carts:[]
       },
       //取得資料ID
       productID:'',
-      loadingItem:'0'
+      loadItem:''
       }
 
     },
@@ -64,14 +68,19 @@ const app = Vue.createApp({
     },
     //3 加入購物車
     addCart(id,qty=1){
+      this.isShow = true
+      this.loadItem = id ;
       const tempCart = {
         product_id : id ,
         qty,
       }
       axios.post(`${apiUrl}/v2/api/${apiPath}/cart`,{data:tempCart})
       .then(res=> {
+    
         this.$refs.productModal.hideModal();
         alert(res.data.message)
+        this.loadItem = '' ;
+        this.isShow = false
       })
       .catch(err=> console.log(err))
     },
@@ -86,35 +95,57 @@ const app = Vue.createApp({
     },
     //5 刪除購物車(單一品項)
     deleteCart(id){
-      this.loadingItem = id ;
-      console.log(this.loadingItem);
+      this.isShow = true
+      this.loadItem = id ;  
       axios.delete(`${apiUrl}/v2/api/${apiPath}/cart/${id}`)
-      .then(res=>alert(res.data.message))
+      .then(res=>{
+        alert(res.data.message)
+        this.loadItem = '' ;
+        this.isShow = false
+      })
       .catch(err=> console.log(err))
-      this.loadingItem = '' ;
+
     },
     //6 清空購物車
     deleteAllCart(){
       axios.delete(`${apiUrl}/v2/api/${apiPath}/carts`)
-      .then(res=>alert(res.data.message))
-      .catch(err=> console.log(err))
+      .then(res=>{
+        alert(res.data.message)
+      })
+      .catch(err=> console.log(err));
+
+
     },
     //7 更新購物車
     updateCart(id,qty=1){
-      this.loadingItem = id ;
-      console.log(id);
-      console.log(this.loadingItem);
+      this.loadItem = id ;
       const data = {
         product_id:id,
         qty
       }
       axios.put(`${apiUrl}/v2/api/${apiPath}/cart/${id}`,{data})
-      .then(res=>alert(res.data.message))
-      .catch(err=> console.log(err))
-      this.loadingItem = "0" ;
+      .then(res=>{
+        alert(res.data.message)
+        this.loadItem = '' ;
+        console.log(this.loadItem);
+      })
+      .catch(err=> console.log(err));
+      
 
+    },
 
-    }
+    // submit() {
+    //   let loader = this.$loading.show({
+    //       // Optional parameters
+    //       container: this.fullPage ? null : this.$refs.formContainer,
+    //       canCancel: true,
+    //       onCancel: this.onCancel,
+    //   });
+    //   // simulate AJAX
+    //   setTimeout(() => {
+    //       loader.hide()
+    //   }, 5000)
+    // }
   },
   components:{
     productModal
@@ -129,8 +160,11 @@ const app = Vue.createApp({
   mounted() {
     this.getData();
     this.getCart();
-    
+    // submit()
   }
 })
 
+// app.use(VueLoading.LoadingPlugin);
+app.component('load',VueLoading.component)
 app.mount('#app');
+
