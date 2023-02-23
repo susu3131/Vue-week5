@@ -11,7 +11,7 @@
   <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.9.0/css/all.min.css'
     integrity='sha512-q3eWabyZPc1XTCmF+8/LuE1ozpg5xxn7iO89yfSOd5/oKvyqLngoNGsx8jq92Y8eXJ/IRxQbEC+FGSYxtk2oiw=='
     crossorigin='anonymous' />
-    <link href="https://cdn.jsdelivr.net/npm/vue-loading-overlay@6/dist/css/index.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/vue-loading-overlay@6/dist/css/index.css" rel="stylesheet">
 </head>
 
 <body>
@@ -21,7 +21,7 @@
     <div class="container">
       <div class="mt-4">
         <!-- 產品Modal -->
-        <product-modal :id="productID" :add-cart="addCart" :loadtype ="isShow" ref="productModal"></product-modal>
+        <product-modal :id="productID" :add-cart="addCart" :loadtype="isShow" ref="productModal"></product-modal>
         <!-- 產品Modal -->
         <table class="table align-middle">
           <thead>
@@ -50,12 +50,13 @@
               </td>
               <td>
                 <div class="btn-group btn-group-sm">
-                  <button type="button" class="btn btn-outline-secondary " @click="getID(product.id), isShow = true"  >
+                  <button type="button" class="btn btn-outline-secondary " @click="getID(product.id), isShow = true">
                     <i class="fas fa-spinner fa-pulse" v-if="isShow"></i>
                     查看更多
                   </button>
-                  <button type="button" class="btn btn-outline-danger" @click="addCart(product.id),isShow = true"  :disabled="loadItem === product.id">
-                    <i class="fas fa-spinner fa-pulse"  v-if="isShow"></i>
+                  <button type="button" class="btn btn-outline-danger" @click="addCart(product.id),isShow = true"
+                    :disabled="loadItem === product.id">
+                    <i class="fas fa-spinner fa-pulse" v-if="isShow"></i>
                     加到購物車
                   </button>
                 </div>
@@ -65,7 +66,7 @@
         </table>
         <!-- 購物車列表 -->
         <div class="text-end">
-          <button class="btn btn-outline-danger" type="button" @click="deleteAllCart" >清空購物車</button>
+          <button class="btn btn-outline-danger" type="button" @click="deleteAllCart">清空購物車</button>
         </div>
         <table class="table align-middle">
           <thead>
@@ -76,11 +77,12 @@
               <th>單價</th>
             </tr>
           </thead>
-          <tbody >
-            <template v-if ="cart.carts">
+          <tbody>
+            <template v-if="cart.carts">
               <tr v-for="cartProduct in cart.carts" :key="cartProduct.id">
                 <td>
-                  <button type="button" class="btn btn-outline-danger btn-sm"  @click="deleteCart(cartProduct.id)"  :disabled="loadItem === cartProduct.id">
+                  <button type="button" class="btn btn-outline-danger btn-sm" @click="deleteCart(cartProduct.id)"
+                    :disabled="loadItem === cartProduct.id">
                     <i class="fas fa-spinner fa-pulse" v-if="isShow"></i>
                     x
                   </button>
@@ -91,8 +93,9 @@
                 <td>
                   <div class="input-group input-group-sm">
                     <div class="input-group mb-3">
-                      <select name="" id="" class="form-control" v-model ="cartProduct.qty" @change =" updateCart(cartProduct.id,cartProduct.qty)"  :disabled="loadItem === cartProduct.id"  >
-                        <option :value="i" v-for ="i in 30" :key="`編號${i}`">{{i}}</option>
+                      <select name="" id="" class="form-control" v-model="cartProduct.qty"
+                        @change=" updateCart(cartProduct.id,cartProduct.qty)" :disabled="loadItem === cartProduct.id">
+                        <option :value="i" v-for="i in 30" :key="`編號${i}`">{{i}}</option>
                       </select>
                       <span class="input-group-text" id="basic-addon2">{{ cartProduct.product.unit}}</span>
                     </div>
@@ -104,10 +107,10 @@
               </tr>
             </template>
           </tbody>
-          <tfoot >
+          <tfoot>
             <tr>
               <td colspan="3" class="text-end">總計</td>
-              <td class="text-end" v-model = "cart.total">{{ cart.total}}</td>
+              <td class="text-end" v-model="cart.total">{{ cart.total}}</td>
             </tr>
             <tr>
 
@@ -115,50 +118,51 @@
         </table>
       </div>
       <!-- 驗證 -->
-      <!-- <div class="my-5 row justify-content-center">
-        <v-form ref="form" class="col-md-6" v-slot="{ errors }">
+      <div class="my-5 row justify-content-center">
+        <v-form ref="form" class="col-md-6" v-slot="{ errors }" @submit.prevent="submit">
           <div class="mb-3">
             <label for="email" class="form-label">Email</label>
             <v-field id="email" name="email" type="email" class="form-control"
-              :class="{ 'is-invalid': errors['email'] }" placeholder="請輸入 Email"></v-field>
+              :class="{ 'is-invalid': errors['email'] }" placeholder="請輸入 Email" rules="email|required"
+              v-model="userData.user.email"></v-field>
             <error-message name="email" class="invalid-feedback"></error-message>
           </div>
 
           <div class="mb-3">
             <label for="name" class="form-label">收件人姓名</label>
             <v-field id="name" name="姓名" type="text" class="form-control" :class="{ 'is-invalid': errors['姓名'] }"
-              placeholder="請輸入姓名" rules="required"></v-field>
+              placeholder="請輸入姓名" rules="required" v-model="userData.user.name"></v-field>
             <error-message name="姓名" class="invalid-feedback"></error-message>
           </div>
 
           <div class="mb-3">
             <label for="tel" class="form-label">收件人電話</label>
-            <v-field id="tel" name="電話" type="text" class="form-control" :class="{ 'is-invalid': errors['電話'] }"
-              placeholder="請輸入電話"></v-field>
+            <v-field id="tel" name="電話" type="tel" class="form-control" :class="{ 'is-invalid': errors['電話'] }"
+              placeholder="請輸入電話" v-model="userData.user.tel" rules="numeric|required|min:8"></v-field>
             <error-message name="電話" class="invalid-feedback"></error-message>
           </div>
 
           <div class="mb-3">
             <label for="address" class="form-label">收件人地址</label>
             <v-field id="address" name="地址" type="text" class="form-control" :class="{ 'is-invalid': errors['地址'] }"
-              placeholder="請輸入地址" rules="required"></v-field>
+              placeholder="請輸入地址" rules="required" v-model="userData.user.address"></v-field>
             <error-message name="地址" class="invalid-feedback"></error-message>
           </div>
 
           <div class="mb-3">
             <label for="message" class="form-label">留言</label>
-            <textarea id="message" class="form-control" cols="30" rows="10"></textarea>
+            <textarea id="message" class="form-control" cols="30" rows="10" v-model="userData.message"></textarea>
           </div>
           <div class="text-end">
             <button type="submit" class="btn btn-danger">送出訂單</button>
           </div>
         </v-form>
-      </div>  -->
+      </div>
     </div>
   </div>
 
   <script type="text/x-template" id="userProductModal">
-    
+
     <div class="modal fade" id="productModal" tabindex="-1" role="dialog"
          aria-labelledby="exampleModalLabel" aria-hidden="true" ref="modal">
       <div class="modal-dialog modal-xl" role="document">
@@ -211,15 +215,16 @@
     integrity="sha384-j0CNLUeiqtyaRmlzUHCPZ+Gy5fQu0dQ6eZ/xAww941Ai1SxSY+0EQqNXNE6DZiVc"
     crossorigin="anonymous"></script>
   <script src="https://unpkg.com/vue@next"></script>
-  <script src="https://unpkg.com/vee-validate@next"></script>
-  <script src="https://unpkg.com/@vee-validate/i18n@4.1.0"></script>
-  <script src="https://unpkg.com/@vee-validate/rules"></script>
-  <!-- Vue js -->
-<script src="https://cdn.jsdelivr.net/npm/vue@3.2"></script>
-<!-- Lastly add this package -->
-<script src="https://cdn.jsdelivr.net/npm/vue-loading-overlay@6"></script>
 
-<!-- Init the plugin and component-->
+  <!-- Vue js -->
+  <script src="https://cdn.jsdelivr.net/npm/vue@3.2"></script>
+  <!-- Lastly add this package -->
+  <script src="https://cdn.jsdelivr.net/npm/vue-loading-overlay@6"></script>
+  <!-- //驗證套件 -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/vee-validate/4.5.8/vee-validate.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@vee-validate/rules@4.5.8/dist/vee-validate-rules.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@vee-validate/i18n@4.5.8/dist/vee-validate-i18n.min.js"></script>
+
   <!-- <script src="./javascript/app2.js" type="module"></script> -->
   <script src="./loading.js" type="module"></script>
   <script src="all.js" type="module"></script>
