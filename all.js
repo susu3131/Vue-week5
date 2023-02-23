@@ -152,9 +152,21 @@ const app = Vue.createApp({
 
     //8 送出訂單
     submit(){
-      console.log('test');
+      axios.post(`${apiUrl}/v2/api/${apiPath}/order`, {data:this.userData})
+      .then(res => {
+        alert(res.data.message)
+        this.userData = {
+          user: {
+            email: '',
+            name: '',
+            tel: '',
+            address: '',
+          },
+          message: ''}
+        })
+      .catch(err => console.log(err));
     }
-    // submit() {
+    // loadSubmit() {
     //   let loader = this.$loading.show({
     //       // Optional parameters
     //       container: this.fullPage ? null : this.$refs.formContainer,
@@ -180,7 +192,9 @@ const app = Vue.createApp({
   mounted() {
     this.getData();
     this.getCart();
-    // submit()
+
+    
+    
   }
 })
 
